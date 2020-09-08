@@ -1,0 +1,20 @@
+https://www.db-fiddle.com/f/tpgfH4z9e6XQR9jJyKPUdY/0
+
+select regions.name, coalesce(sum(sales.amount)/count(employees.Id),0) as average,
+
+(select coalesce(sum(sales.amount)/count(employees.Id),0) as average
+
+from employees 
+join states on states.id = employees.stateId
+join regions on regions.id = states.regionId
+left join sales on sales.employeeId=employees.Id
+group by regions.name
+order by average desc
+limit 1) - coalesce(sum(sales.amount)/count(employees.Id),0) as difference
+
+
+from employees 
+join states on states.id = employees.stateId
+join regions on regions.id = states.regionId
+left join sales on sales.employeeId=employees.Id
+group by regions.name
